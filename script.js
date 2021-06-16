@@ -45,9 +45,52 @@ $(document).ready(function () {
     $(this).toggleClass("selected");
   });
 
-  $(".input-cell").click(function(){
+  $(".input-cell").click(function(e){
+    if(e.ctrlKey){
+      let [rowId,colId] = getRowCols(this);
+
+      if(rowId > 1){
+      let topCellSelected = $('#row-'+(rowId-1)+'-col-'+colId).hasClass("selected");
+     // console.log("topCellSelected "+rowId+" "+colId);
+      if(topCellSelected){
+         $(this).addClass("top-cell-selected");
+         $('#row-'+(rowId-1)+'-col-'+colId).addClass("bottom-cell-selected");
+      }  
+    }
+    if(rowId < 50){
+      let bottomCellSelected = $('#row-'+(rowId+1)+'-col-'+colId).hasClass("selected");
+      //console.log("bottomCellSelected "+bottomCellSelected);
+      if(bottomCellSelected){
+         $(this).addClass("bottom-cell-selected");
+         $('#row-'+(rowId+1)+'-col-'+colId).addClass("top-cell-selected");
+      }
+    }
+    if(colId > 1){
+      let leftCellSelected = $('#row-'+rowId+'-col-'+(colId-1)).hasClass("selected");
+      //console.log("leftCellSelected "+leftCellSelected);
+      if(leftCellSelected){
+         $(this).addClass("left-cell-selected");
+         $('#row-'+rowId+'-col-'+(colId-1)).addClass("right-cell-selected");
+      }
+    }
+    if(colId < 50){
+      let rightCellSelected = $('#row-'+rowId+'-col-'+(colId+1)).hasClass("selected");
+      if(rightCellSelected){
+         $(this).addClass("right-cell-selected");
+         $('#row-'+rowId+'-col-'+(colId+1)).addClass("left-cell-selected");
+      }
+    }
+    $(this).addClass("selected");
+  }
+    else {
+    
+    $(".input-cell").removeClass("right-cell-selected");
+    $(".input-cell").removeClass("left-cell-selected");
+    $(".input-cell").removeClass("top-cell-selected");
+    $(".input-cell").removeClass("bottom-cell-selected");
     $(".input-cell.selected").removeClass("selected");
     $(this).addClass("selected");
+    }
   });
 
   $(".input-cell").dblclick(function(){
@@ -113,5 +156,13 @@ $(".icon-underline").click(function(){
   updateCell("text-decoration","underline");
   }
 })
+
+function getRowCols(ele)
+{
+  let ArrayId = $(ele).attr("id").split("-");
+  let rowId = parseInt(ArrayId[1]);
+  let colId = parseInt(ArrayId[3]);
+  return [rowId,colId];
+}
 
 
